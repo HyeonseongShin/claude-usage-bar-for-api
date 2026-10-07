@@ -1,10 +1,17 @@
 # claude-usage-bar-for-api
 
-`cost-bar` is a Claude Code mod that shows the session cost (the figure `/cost` totals) in a bar above the prompt.
+`cost-bar` is a Claude Code mod for API-key users. It draws one bar above the prompt with the session cost, context fill, turn count and a prompt-cache countdown.
 
 ```
-Session cost: $0.042
+Session cost: $0.097 | Context 82k/1.0M(8%) | Turn 12 | Cache(5m) 4:12
 ```
+
+| Field | Source |
+| - | - |
+| Session cost | The total `/cost` shows, updated after each turn |
+| Context | Tokens in the window, the window size and the engine's percentage |
+| Turn | Prompts you have sent this session |
+| Cache | Time left before the prompt cache expires, counted down every second; `expired` at zero |
 
 ## Install
 
@@ -16,6 +23,14 @@ Answer `y` to add the marketplace, then pick a scope. Needs Claude Code 2.1.287+
 
 Try it without installing: `claude --plugin-dir /path/to/this/repo`
 
-## How it works
+## Cache countdown
 
-`session.measure` pushes the running cost after each turn; `hooks/register.tsx` stores it and draws it in the `AbovePrompt` slot. The bar stays hidden until a cost is known.
+The TTL is chosen once at session start, in Claude Code's own order: `FORCE_PROMPT_CACHING_5M=1`, then `CLAUDE_CODE_PROMPT_CACHE_TTL`, then the `promptCacheTtl` setting, then `ENABLE_PROMPT_CACHING_1H=1`, then the 5 minute default. Restart the session after changing any of them.
+
+The timer starts when a request starts, as the API counts it: at your prompt, and again right after each tool call finishes. Tool-heavy turns refresh the cache mid-turn, so the real expiry can be later than shown.
+
+Not covered: Claude subscriptions. Their 1 hour default, and the drop to 5 minutes once a plan's limit is exceeded, are not detected.
+
+## Layout
+
+`hooks/register.tsx` holds the hooks, `hooks/format.ts` and `hooks/cache.ts` the pure formatting and TTL logic (tested by `hooks/*.test.ts`). Run `claude plugin validate .` and `claude plugin test .` after changes.
