@@ -16,7 +16,7 @@ Session cost: $0.097 | Context [█░░░░░░░░░] 8% 82k/1.0M | Tu
 ## Install
 
 ```
-/plugin install cost-bar --marketplace <owner>/<repo>
+/plugin install cost-bar --marketplace HyeonseongShin/claude-usage-bar-for-api
 ```
 
 Answer `y` to add the marketplace, then pick a scope. Needs Claude Code 2.1.287+.
