@@ -3,13 +3,13 @@
 `cost-bar` is a Claude Code mod for API-key users. It draws one bar above the prompt with the session cost, context fill, turn count and a prompt-cache countdown.
 
 ```
-Session cost: $0.097 | Context 82k/1.0M(8%) | Turn 12 | Cache(5m) 4:12
+Session cost: $0.097 | Context [█░░░░░░░░░] 8% 82k/1.0M | Turn 12 | Cache(5m) 4:12
 ```
 
 | Field | Source |
 | - | - |
 | Session cost | The total `/cost` shows, updated after each turn |
-| Context | Tokens in the window, the window size and the engine's percentage |
+| Context | A 10-cell bar (at least one cell once usage is above 0%), the engine's percentage, then tokens in the window over the window size |
 | Turn | Prompts you have sent this session |
 | Cache | Time left before the prompt cache expires, counted down every second; `expired` at zero |
 

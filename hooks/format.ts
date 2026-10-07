@@ -5,5 +5,12 @@ export const formatTokens = (n: number): string =>
 
 export type Context = { tokens?: number; window: number; percent?: number }
 
-export const formatContext = ({ tokens, window, percent }: Context): string =>
-  `Context ${formatTokens(tokens ?? 0)}/${formatTokens(window)}(${percent ?? 0}%)`
+const BAR_CELLS = 10
+
+export const formatContext = ({ tokens, window, percent }: Context): string => {
+  const pct = percent ?? 0
+  const filled = Math.min(BAR_CELLS, Math.max(pct > 0 ? 1 : 0, Math.round((pct / 100) * BAR_CELLS)))
+  const bar = '█'.repeat(filled) + '░'.repeat(BAR_CELLS - filled)
+
+  return `Context [${bar}] ${pct}% ${formatTokens(tokens ?? 0)}/${formatTokens(window)}`
+}
